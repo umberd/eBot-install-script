@@ -5,7 +5,7 @@
 # This is not bullet-proof. So I'm not responsible
 # of anything if you use this script.
 # If you see anything, please let me know here:
-# LINK OF EBOT Forum.
+# http://forum.esport-tools.net/d/35-automatic-script-not-ready
 
 
 # Detect Debian users running the script with "sh" instead of bash
@@ -34,50 +34,70 @@ else
 fi
 
 # Try to get our IP from the system and fallback to the Internet.
-# I do this to make the script compatible with NATed servers (lowendspirit.com)
-# and to avoid getting an IPv6.
+# CHECK NAT
 IP=$(ip addr | grep 'inet' | grep -v inet6 | grep -vE '127\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | grep -o -E '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -1)
 if [[ "$IP" = "" ]]; then
+		echo '1'
 		IP=$(wget -qO- ipv4.icanhazip.com)
 fi
 
 if [[ -e /home/ebot/ebot-csgo/config/config.ini ]]; then
 	while :
 	do
-	clear
+	
 		echo "Looks like Ebot-CSGO is already on your server"
 		echo ""
 		echo "What do you want to do?"
 		echo "   1) Start Ebot-CSGO Daemon"
 		echo "   2) Stop Ebot-CSGO Daemon"
 		echo "   3) Restart Ebot-CSGO daemon"
-		echo "   4) Clear cache Ebot-web"		
-		echo "   5) Exit"
+		echo "   4) Clear cache Ebot-web"	
+		echo "   5) Secure mysql"
+		echo "   6) Delete EBOT (coming soon)"
+		echo "   7) Update Ebot (coming soon)"		
+		echo "   8) Exit"
 		read -p "Select an option [1-5]: " option
 		case $option in
 			1) 
 			echo ""
 			echo "Staring Ebot-CSGO... (need to be set)"
+			service ebot start
 			exit
 			;;
 			2)
 			echo "Stoping Ebot-CSGO"
+			service ebot stop
 			exit
 			;;
 			3) 
 			echo "Restarting Ebot-CSGO"
+			service ebot restart
 			exit
 			;;
 			4) 
 			echo "Clearing Cache"
+			service ebot clear-cache
 			exit
 			;;
-			5) exit;;
+			5) 
+			echo "Securing mysql"
+			mysql_secure_installation
+			exit
+			;;
+			6) 
+			echo "(coming soon)"
+			exit
+			;;
+			7) 
+			echo "(coming soon)"
+			exit
+			;;
+			8) exit;;
 		esac
 	done
 else
 	clear
-	echo 'Welcome to Ebot 3.2 installer'
+	echo 'Welcome to Ebot 3.2 installer by vince52'
 	echo ""
 	# Some questions for users
 	echo "I need to ask you a few questions before starting the setup"
@@ -98,12 +118,11 @@ else
 		read -p "Sub-domain name: " -e -i ebot.yourdomain.com SUBDOMAIN
 	fi
 	echo ""
-	echo "Okay, that was all I needed."
+	echo "Okay, I will ask you other questions later."
 	read -n1 -r -p "Press any key to continue..."
 	
 	# 2) Install SERVER-REQUIREMENTS
 	apt-get update
-	apt-get upgrade
 	apt-get install apache2 gcc make libxml2-dev autoconf ca-certificates unzip nodejs curl libcurl4-openssl-dev pkg-config libssl-dev screen -y
 	
 	# 3) INSTALL PHP
@@ -114,29 +133,68 @@ else
 	# COMPILE AND INSTALL THE NEW PHP VERSION:
 	mkdir /home/install
 	cd /home/install
-	wget http://be2.php.net/get/php-5.5.15.tar.bz2/from/this/mirror -O php-5.5.15.tar.bz2
-	tar -xjvf php-5.5.15.tar.bz2
-	cd php-5.5.15
+	wget http://be2.php.net/get/php-5.6.26.tar.bz2/from/this/mirror -O php-5.6.26.tar.bz2
+	tar -xjvf php-5.6.26.tar.bz2
+	cd php-5.6.26
 	./configure --prefix /usr/local --with-mysql --enable-maintainer-zts --enable-sockets --with-openssl --with-pdo-mysql 
 	make
 	make install
 	cd /home/install
-	wget http://pecl.php.net/get/pthreads-2.0.7.tgz
-	tar -xvzf pthreads-2.0.7.tgz
-	cd pthreads-2.0.7
+	wget http://pecl.php.net/get/pthreads-2.0.10.tgz
+	tar -xvzf pthreads-2.0.10.tgz
+	cd pthreads-2.0.10
 	/usr/local/bin/phpize
 	./configure
 	make
 	make install
 	echo 'date.timezone = Europe/Paris' >> /usr/local/lib/php.ini
 	echo 'extension=pthreads.so' >> /usr/local/lib/php.ini
+	apt-get install libapache2-mod-php5 -y
 	
 	# 4) INSTALL & CONFIG MYSQL SERVER (NEED TO FINISH IT)
-	apt-get install mysql-server
 	
-	# Variables to be set: $sqlpassword
+	if [[ ! -e /etc/mysql/conf.d ]]; then
+		echo "Okay, Mysql is not installed."
+		echo "This script will install it for you"
+		echo "You will need to set a MYSQL's root password"
+		echo ""
+		echo "Here is an example of a good and random password:"
+		rootpasswd=$(openssl rand -base64 12)
+		echo $rootpasswd
+		echo "DON'T FORGET TO REMEMBER IT IF IT IS DIFFERENT THAN THIS ONE"
+		echo "YOU WILL NEED IT AFTER FOR EBOT!!!"
+		read -n1 -r -p "Press any key to continue..."
+		apt-get install mysql-server -y
+		
+	fi
+	
+	# create random password
+	SQLPASSWORDEBOTV3="$(openssl rand -base64 12)"
+
+	# If /root/.my.cnf exists then it won't ask for root password
+	if [ -f /root/.my.cnf ]; then
+
+		mysql -e "CREATE DATABASE ebotv3;"
+		mysql -e "CREATE USER ebotv3@localhost IDENTIFIED BY '$SQLPASSWORDEBOTV3';"
+		mysql -e "GRANT ALL PRIVILEGES ON ebotv3.* TO 'ebotv3'@'localhost';"
+		mysql -e "FLUSH PRIVILEGES;"
+
+	# If /root/.my.cnf doesn't exist then it'll ask for root password   
+	else
+		echo "Please enter root user MySQL password!"
+		read -p "YOUR SQL ROOT PASSWORD: " -e -i $rootpasswd rootpasswd
+		mysql -u root -p$rootpasswd -e "CREATE DATABASE ebotv3;"
+		mysql -u root -p$rootpasswd -e "CREATE USER ebotv3@localhost IDENTIFIED BY '$SQLPASSWORDEBOTV3';"
+		mysql -u root -p$rootpasswd -e "GRANT ALL PRIVILEGES ON ebotv3.* TO 'ebotv3'@'localhost';"
+		mysql -u root -p$rootpasswd -e "FLUSH PRIVILEGES;"
+	fi
+	
+	apt-get install php5-mysql -y
+	
+	# Variables to be set: $SQLPASSWORDEBOTV3
 	
 	# 5) INSTALL EBOT-CSGO
+	
 	mkdir /home/ebot
 	cd /home/ebot
 	wget https://github.com/deStrO/eBot-CSGO/archive/master.zip
@@ -150,7 +208,22 @@ else
 	php composer.phar install
 	# Command line of my ebot guide: cp config/config.ini.smp config/config.ini
 	
-	# Generate config.ini (need SQL DATABASE HERE $sqlpassword)
+	EXTERNALIP=$(wget -qO- ipv4.icanhazip.com)
+	EXTIP=""
+	if [[ "$IP" != "$EXTERNALIP" ]]; then
+		echo ""
+		echo "Looks like your server is behind a NAT!"
+		echo ""
+		echo "If your server is NATed (e.g. LowEndSpirit), I need to know the external IP"
+		echo "If that's not the case, just ignore this and leave the next field blank"
+		read -p "External IP: " -e USEREXTERNALIP
+		if [[ "$USEREXTERNALIP" != "" ]]; then
+			EXTIP=$USEREXTERNALIP
+		fi
+	fi
+	
+	
+	# Generate config.ini (need SQL DATABASE HERE $SQLPASSWORDEBOTV3)
 	echo '; eBot - A bot for match management for CS:GO
 ; @license     http://creativecommons.org/licenses/by/3.0/ Creative Commons 3.0
 ; @author      Julien Pardons <julien.pardons@esport-tools.net>
@@ -161,16 +234,18 @@ else
 MYSQL_IP = "127.0.0.1"
 MYSQL_PORT = "3306"
 MYSQL_USER = "ebotv3"
-MYSQL_PASS = "$sqlpassword"
+MYSQL_PASS = "'$SQLPASSWORDEBOTV3'"
 MYSQL_BASE = "ebotv3"
 
 [Config]
-BOT_IP = "$IP"
+BOT_IP = "'$IP'"
 BOT_PORT = 12360
+EXTERNAL_LOG_IP = "'$EXTIP'" ; use this in case your server isnt binded with the external IP (behind a NAT)
 MANAGE_PLAYER = 1
 DELAY_BUSY_SERVER = 120
 NB_MAX_MATCHS = 0
 PAUSE_METHOD = "nextRound" ; nextRound or instantConfirm or instantNoConfirm
+NODE_STARTUP_METHOD = "node" ; binary file name or none in case you are starting it with forever or manually
 
 [Match]
 LO3_METHOD = "restart" ; restart or csay or esl
@@ -202,7 +277,6 @@ DELAY_READY = true' > /home/ebot/ebot-csgo/config/config.ini
 	
 	# 6) INSTALL EBOT-WEB
 	
-	
 	cd /home/ebot
 	rm -R master*
 	wget https://github.com/deStrO/eBot-CSGO-Web/archive/master.zip
@@ -225,7 +299,7 @@ DELAY_READY = true' > /home/ebot/ebot-csgo/config/config.ini
 
   demo_download: true
 
-  ebot_ip: $IP
+  ebot_ip: "$IP"
   ebot_port: 12360
 
   # lan or net, it's to display the server IP or the GO TV IP
@@ -235,7 +309,8 @@ DELAY_READY = true' > /home/ebot/ebot-csgo/config/config.ini
   # set to 0 if you don't want a refresh
   refresh_time: 30" > /home/ebot/ebot-web/config/app_user.yml
 	
-	# Generate database.yml (NEED DATABASE HERE $sqlpassword)
+	# Generate databases.yml
+	rm /home/ebot/ebot-web/config/databases.yml
 	echo "# You can find more information about this file on the symfony website:
 # http://www.symfony-project.org/reference/1_4/en/07-Databases
 
@@ -245,7 +320,7 @@ all:
     param:
       dsn:      mysql:host=127.0.0.1;dbname=ebotv3
       username: ebotv3
-      password: $sqlpassword" > /home/ebot/ebot-web/config/app_user.yml	
+      password: $SQLPASSWORDEBOTV3" > /home/ebot/ebot-web/config/databases.yml	
 	
 	cd /home/ebot
 	cd ebot-web
@@ -257,11 +332,12 @@ all:
 	php symfony doctrine:build --all --no-confirmation
 	
 	#ASK USER USERNAME AND PASSWORD
-	
-	php symfony guard:create-user --is-super-admin admin@ebot admin admin
+	echo "THE LAST QUESTION: I need a username and a password for ebot"
+	read -p "Username: " -e -i admin EBOTUSER
+	read -p "Username: " -e -i password EBOTPASSWORD
+	php symfony guard:create-user --is-super-admin admin@ebot $EBOTUSER $EBOTPASSWORD
 	
 	# 7) CONFIG APACHE
-	
 	a2enmod rewrite
 	
 	# IF INSTALL IS FOR A SUB-DOMAIN
@@ -289,8 +365,50 @@ DocumentRoot /home/ebot/ebot-web/web
 </Directory>
 </VirtualHost>" > /etc/apache2/sites-available/ebotv3.conf
 
-	a2ensite ebotv3.conf
-	
+
+
+
+		a2ensite ebotv3.conf
+		
+	else
+		echo "Alias / /home/ebot/ebot-web/web/
+
+<Directory /home/ebot/ebot-web/web/>
+	AllowOverride All
+	<IfVersion < 2.4>
+		Order allow,deny
+		allow from all
+	</IfVersion>
+
+	<IfVersion >= 2.4>
+		Require all granted
+	</IfVersion>
+</Directory>" > /etc/apache2/sites-available/ebotv3.conf
+
+		echo "Options +FollowSymLinks +ExecCGI
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # uncomment the following line, if you are having trouble
+  # getting no_script_name to work
+  RewriteBase /
+
+  # we skip all files with .something
+  #RewriteCond %{REQUEST_URI} \..+$
+  #RewriteCond %{REQUEST_URI} !\.html$
+  #RewriteRule .* - [L]
+
+  # we check if the .html version is here (caching)
+  RewriteRule ^$ index.html [QSA]
+  RewriteRule ^([^.]+)$ $1.html [QSA]
+  RewriteCond %{REQUEST_FILENAME} !-f
+
+  # no, so we redirect to our front web controller
+  RewriteRule ^(.*)$ index.php [QSA,L]
+</IfModule>" > /home/ebot/ebot-web/web/.htaccess
+
+		a2ensite ebotv3.conf
 	fi
 	
 	service apache2 reload
@@ -306,10 +424,17 @@ DocumentRoot /home/ebot/ebot-web/web
 	# 9) SECURITY ??? (COMING SOON)
 	
 	# Finished
+	
 	echo ""
 	echo "Finished!"
 	echo ""
 	#If ebot-web is on subdomain
-	echo "You can access to ebot client here: http://$SUBDOMAIN.com"
+	if [[ "$SUBORIP" -eq 1 ]]; then
+		echo "You can access to eBot-WEB interface here: http://$SUBDOMAIN"
+	else
+		echo "You can access to ebot client here: http://$IP"
+	fi
+	echo "Username: $EBOTUSER"
+	echo "Password: $EBOTPASSWORD"
 	echo ""
 fi
