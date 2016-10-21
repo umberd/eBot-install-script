@@ -307,7 +307,13 @@ DELAY_READY = true' > /home/ebot/ebot-csgo/config/config.ini
   mode: lan
 
   # set to 0 if you don't want a refresh
-  refresh_time: 30" > /home/ebot/ebot-web/config/app_user.yml
+  refresh_time: 30
+
+  # Toornament Configuration
+  toornament_id:
+  toornament_secret:
+  toornament_api_key:
+  toornament_plugin_key: test-123457890" > /home/ebot/ebot-web/config/app_user.yml
 	
 	# Generate databases.yml
 	rm /home/ebot/ebot-web/config/databases.yml
