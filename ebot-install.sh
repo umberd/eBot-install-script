@@ -5,7 +5,7 @@
 # This is not bullet-proof. So I'm not responsible
 # of anything if you use this script.
 # If you see anything, please let me know here:
-# http://forum.esport-tools.net/d/35-automatic-script-not-ready
+# http://forum.esport-tools.net/d/94-ebot-auto-install-script
 
 
 # Detect Debian users running the script with "sh" instead of bash
