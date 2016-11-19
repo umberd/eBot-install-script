@@ -38,7 +38,7 @@ fi
 IP=$(ip addr | grep 'inet' | grep -v inet6 | grep -vE '127\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | grep -o -E '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -1)
 if [[ "$IP" = "" ]]; then
 		echo '1'
-		IP=$(wget -qO- ipv4.icanhazip.com)
+		IP=$(wget -qO- api.ipify.org)
 fi
 
 if [[ -e /home/ebot/ebot-csgo/config/config.ini ]]; then
@@ -124,11 +124,22 @@ else
 	# 2) Install SERVER-REQUIREMENTS
 	apt-get update
 	apt-get install apache2 gcc make libxml2-dev autoconf ca-certificates unzip nodejs curl libcurl4-openssl-dev pkg-config libssl-dev screen -y
-	
+	if [ $? != 0 ]; then
+		echo "(LINE 126) There is an error. Are you running apt application somewhere?"
+		echo "Can you check your debian source list?"
+		echo "ABORT"
+		exit
+	fi
 	# 3) INSTALL PHP
 	
 	# If PHP is already installed, removing it.
-	apt-get autoremove php php-dev php-cli 
+	apt-get autoremove php5 php5-dev php5-cli php php-dev php-cli -y
+		if [ $? != 0 ]; then
+		echo "(LINE 126) There is an error. Are you running apt application somewhere?"
+		echo "Can you check your debian source list?"
+		echo "ABORT"
+		exit
+	fi
 		
 	# COMPILE AND INSTALL THE NEW PHP VERSION:
 	mkdir /home/install
@@ -149,7 +160,14 @@ else
 	make install
 	echo 'date.timezone = Europe/Paris' >> /usr/local/lib/php.ini
 	echo 'extension=pthreads.so' >> /usr/local/lib/php.ini
+	
 	apt-get install libapache2-mod-php5 -y
+	if [ $? != 0 ]; then
+		echo "(LINE 162) There is an error. Are you running apt application somewhere?"
+		echo "Can you check your debian source list?"
+		echo "ABORT"
+		exit
+	fi
 	
 	# 4) INSTALL & CONFIG MYSQL SERVER (NEED TO FINISH IT)
 	
@@ -164,7 +182,14 @@ else
 		echo "DON'T FORGET TO REMEMBER IT IF IT IS DIFFERENT THAN THIS ONE"
 		echo "YOU WILL NEED IT AFTER FOR EBOT!!!"
 		read -n1 -r -p "Press any key to continue..."
+		
 		apt-get install mysql-server -y
+		if [ $? != 0 ]; then
+			echo "(LINE 183) There is an error. Are you running the APT application somewhere?"
+			echo "Can you check your debian source list?"
+			echo "ABORT"
+			exit
+		fi
 		
 	fi
 	
@@ -183,6 +208,9 @@ else
 	else
 		echo "Please enter root user MySQL password!"
 		read -p "YOUR SQL ROOT PASSWORD: " -e -i $rootpasswd rootpasswd
+		until mysql -u root -p$mysqlRootPassword  -e ";" ; do
+			read -p "Can't connect, please retry: " -e -i $rootpasswd rootpasswd
+		done
 		mysql -u root -p$rootpasswd -e "CREATE DATABASE ebotv3;"
 		mysql -u root -p$rootpasswd -e "CREATE USER ebotv3@localhost IDENTIFIED BY '$SQLPASSWORDEBOTV3';"
 		mysql -u root -p$rootpasswd -e "GRANT ALL PRIVILEGES ON ebotv3.* TO 'ebotv3'@'localhost';"
@@ -190,6 +218,12 @@ else
 	fi
 	
 	apt-get install php5-mysql -y
+	if [ $? != 0 ]; then
+		echo "(LINE 213) There is an error. Are you running apt application somewhere?"
+		echo "Can you check your debian source list?"
+		echo "ABORT"
+		exit
+	fi
 	
 	# Variables to be set: $SQLPASSWORDEBOTV3
 	
@@ -202,7 +236,15 @@ else
 	mv eBot-CSGO-master ebot-csgo
 	cd ebot-csgo
 	curl --silent --location https://deb.nodesource.com/setup_0.12 | bash -
+	
 	apt-get install -y nodejs
+	if [ $? != 0 ]; then
+		echo "(LINE 232) There is an error. Are you running apt application somewhere?"
+		echo "Can you check your debian source list?"
+		echo "ABORT"
+		exit
+	fi
+	
 	npm install socket.io@0.9.12 archiver formidable
 	curl -sS https://getcomposer.org/installer | php
 	php composer.phar install
