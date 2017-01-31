@@ -4,7 +4,7 @@
 # This script will work on Debian and Ubuntu
 # This is not bullet-proof. So I'm not responsible
 # of anything if you use this script.
-# If you see anything, please let me know here:
+# If you see anything wrong, please let me know here:
 # http://forum.esport-tools.net/d/94-ebot-auto-install-script
 
 
