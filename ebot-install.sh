@@ -19,11 +19,6 @@ if [[ "$EUID" -ne 0 ]]; then
 	exit 2
 fi
 
-if [[ ! -e /dev/net/tun ]]; then
-	echo "TUN is not available"
-	exit 3
-fi
-
 if [[ -e /etc/debian_version ]]; then
 	OS=debian
 	GROUPNAME=nogroup
