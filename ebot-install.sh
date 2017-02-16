@@ -129,12 +129,12 @@ else
 	
 	# If PHP is already installed, removing it.
 	apt-get autoremove php5 php5-dev php5-cli php php-dev php-cli -y
-		if [ $? != 0 ]; then
-		echo "(LINE 126) There is an error. Are you running apt application somewhere?"
-		echo "Can you check your debian source list?"
-		echo "ABORT"
-		exit
-	fi
+	#if [ $? != 0 ]; then
+	#	echo "(LINE 126) There is an error. Are you running apt application somewhere?"
+	#	echo "Can you check your debian source list?"
+	#	echo "ABORT"
+	#	exit
+	#fi
 		
 	# COMPILE AND INSTALL THE NEW PHP VERSION:
 	mkdir /home/install
