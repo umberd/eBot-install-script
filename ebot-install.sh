@@ -430,9 +430,8 @@ DocumentRoot /home/ebot/ebot-web/web
 	</IfVersion>
 </Directory> ' > /etc/apache2/sites-available/ebotv3.conf
 
-		echo "Options +FollowSymLinks +ExecCGI
-
-<IfModule mod_rewrite.c>
+		echo 'Options +FollowSymLinks +ExecCGI
+  <IfModule mod_rewrite.c>
   RewriteEngine On
 
   # uncomment the following line, if you are having trouble
@@ -451,7 +450,7 @@ DocumentRoot /home/ebot/ebot-web/web
 
   # no, so we redirect to our front web controller
   RewriteRule ^(.*)$ index.php [QSA,L]
-</IfModule>" > /home/ebot/ebot-web/web/.htaccess
+</IfModule>' > /home/ebot/ebot-web/web/.htaccess
 
 		a2ensite ebotv3.conf
 	fi
