@@ -417,8 +417,8 @@ DocumentRoot /home/ebot/ebot-web/web
 		a2ensite ebotv3.conf
 		
 	else
-		echo " Alias / /home/ebot/ebot-web/web/
-<Directory /home/ebot/ebot-web/web/>
+		echo ' Alias / /home/ebot/ebot-web/web/
+ <Directory /home/ebot/ebot-web/web/>
 	AllowOverride All
 	<IfVersion < 2.4>
 		Order allow,deny
@@ -428,7 +428,7 @@ DocumentRoot /home/ebot/ebot-web/web
 	<IfVersion >= 2.4>
 		Require all granted
 	</IfVersion>
-</Directory>" > /etc/apache2/sites-available/ebotv3.conf
+</Directory> ' > /etc/apache2/sites-available/ebotv3.conf
 
 		echo "Options +FollowSymLinks +ExecCGI
 
