@@ -480,5 +480,4 @@ DocumentRoot /home/ebot/ebot-web/web
 	fi
 	echo "Username: $EBOTUSER"
 	echo "Password: $EBOTPASSWORD"
-	echo ""
 fi
