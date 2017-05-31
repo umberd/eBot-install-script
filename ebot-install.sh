@@ -271,13 +271,13 @@ else
 MYSQL_IP = "127.0.0.1"
 MYSQL_PORT = "3306"
 MYSQL_USER = "ebotv3"
-MYSQL_PASS = "'$SQLPASSWORDEBOTV3'"
+MYSQL_PASS = "ebotv3"
 MYSQL_BASE = "ebotv3"
 
 [Config]
-BOT_IP = "'$IP'"
+BOT_IP = "127.0.0.1"
 BOT_PORT = 12360
-EXTERNAL_LOG_IP = "'$EXTIP'" ; use this in case your server isnt binded with the external IP (behind a NAT)
+EXTERNAL_LOG_IP = "" ; use this in case your server isn't binded with the external IP (behind a NAT)
 MANAGE_PLAYER = 1
 DELAY_BUSY_SERVER = 120
 NB_MAX_MATCHS = 0
@@ -290,6 +290,7 @@ KO3_METHOD = "restart" ; restart or csay or esl
 DEMO_DOWNLOAD = true ; true or false :: whether gotv demos will be downloaded from the gameserver after matchend or not
 REMIND_RECORD = false ; true will print the 3x "Remember to record your own POV demos if needed!" messages, false will not
 DAMAGE_REPORT = true; true will print damage reports at end of round to players, false will not
+USE_DELAY_END_RECORD = false ; use the tv_delay to record postpone the tv_stoprecord & upload
 
 [MAPS]
 MAP[] = "de_cache"
@@ -331,6 +332,11 @@ DELAY_READY = true' > /home/ebot/ebot-csgo/config/config.ini
   log_match_admin: ../../ebot-csgo/logs/log_match_admin
   demo_path: ../../ebot-csgo/demos
 
+  default_max_round: 15
+  default_rules: rules
+  default_overtime_max_round: 3
+  default_overtime_startmoney: 16000
+
   # true or false, whether demos will be downloaded by the ebot server
   # the demos can be downloaded at the matchpage, if it's true
 
@@ -341,7 +347,7 @@ DELAY_READY = true' > /home/ebot/ebot-csgo/config/config.ini
 
   # lan or net, it's to display the server IP or the GO TV IP
   # net mode display only started match on home page
-  mode: lan
+  mode: net
 
   # set to 0 if you don't want a refresh
   refresh_time: 30
