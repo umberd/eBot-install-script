@@ -277,7 +277,7 @@ MYSQL_BASE = "ebotv3"
 [Config]
 BOT_IP = "'$IP'"
 BOT_PORT = 12360
-EXTERNAL_LOG_IP = "'$EXTIP'" ; use this in case your server isn't binded with the external IP (behind a NAT)
+EXTERNAL_LOG_IP = "'$EXTIP'" ; use this in case your server isn't binded with the external IP behind NAT
 MANAGE_PLAYER = 1
 DELAY_BUSY_SERVER = 120
 NB_MAX_MATCHS = 0
