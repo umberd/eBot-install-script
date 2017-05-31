@@ -266,12 +266,14 @@ else
 ; @author      Julien Pardons <julien.pardons@esport-tools.net>
 ; @version     3.0
 ; @date        21/10/2012
+
 [BDD]
 MYSQL_IP = "127.0.0.1"
 MYSQL_PORT = "3306"
 MYSQL_USER = "ebotv3"
 MYSQL_PASS = "'$SQLPASSWORDEBOTV3'"
 MYSQL_BASE = "ebotv3"
+
 [Config]
 BOT_IP = "'$IP'"
 BOT_PORT = 12360
@@ -281,12 +283,15 @@ DELAY_BUSY_SERVER = 120
 NB_MAX_MATCHS = 0
 PAUSE_METHOD = "nextRound" ; nextRound or instantConfirm or instantNoConfirm
 NODE_STARTUP_METHOD = "node" ; binary file name or none in case you are starting it with forever or manually
+
 [Match]
 LO3_METHOD = "restart" ; restart or csay or esl
 KO3_METHOD = "restart" ; restart or csay or esl
 DEMO_DOWNLOAD = true ; true or false :: whether gotv demos will be downloaded from the gameserver after matchend or not
 REMIND_RECORD = false ; true will print the 3x "Remember to record your own POV demos if needed!" messages, false will not
 DAMAGE_REPORT = true; true will print damage reports at end of round to players, false will not
+USE_DELAY_END_RECORD = true ; use the tv_delay to record postpone the tv_stoprecord & upload
+
 [MAPS]
 MAP[] = "de_cache"
 MAP[] = "de_season"
@@ -297,7 +302,9 @@ MAP[] = "de_train"
 MAP[] = "de_mirage"
 MAP[] = "de_cbble"
 MAP[] = "de_overpass"
+
 [WORKSHOP IDs]
+
 [Settings]
 COMMAND_STOP_DISABLED = false
 RECORD_METHOD = "matchstart" ; matchstart or knifestart
