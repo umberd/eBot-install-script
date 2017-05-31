@@ -476,8 +476,8 @@ DocumentRoot /home/ebot/ebot-web/web
 	if [[ "$SUBORIP" -eq 1 ]]; then
 		echo "You can access to eBot-WEB interface here: http://$SUBDOMAIN"
 	else
-		echo "You can access to ebot client here: http://$IP"
+		echo "You can access to ebot client here: http://"$IP
 	fi
-	echo "Username: $EBOTUSER"
-	echo "Password: $EBOTPASSWORD"
+	echo "Username: "$EBOTUSER
+	echo "Password: "$EBOTPASSWORD
 fi
