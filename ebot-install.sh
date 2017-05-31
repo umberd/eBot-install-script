@@ -139,9 +139,9 @@ else
 	# COMPILE AND INSTALL THE NEW PHP VERSION:
 	mkdir /home/install
 	cd /home/install
-	wget http://be2.php.net/get/php-5.6.27.tar.bz2/from/this/mirror -O php-5.6.27.tar.bz2
-	tar -xjvf php-5.6.27.tar.bz2
-	cd php-5.6.27
+	wget http://be2.php.net/get/php-5.6.30.tar.bz2/from/this/mirror -O php-5.6.30.tar.bz2
+	tar -xjvf php-5.6.30.tar.bz2
+	cd php-5.6.30
 	./configure --prefix /usr/local --with-mysql --enable-maintainer-zts --enable-sockets --with-openssl --with-pdo-mysql 
 	make
 	make install
