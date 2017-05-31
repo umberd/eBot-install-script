@@ -391,12 +391,9 @@ all:
 	
 	# IF INSTALL IS FOR A SUB-DOMAIN
 	if [[ "$SUBORIP" -eq 1 ]]; then
-		echo '<VirtualHost *:80>
-	#Edit your email
-	ServerAdmin contact@mydomain.com
-
-#Edit your sub-domain
-ServerAlias $SUBDOMAIN
+		echo ' <VirtualHost *:80>
+ServerAdmin contact@mydomain.com
+ServerAlias '$SUBDOMAIN'
 
 DocumentRoot /home/ebot/ebot-web/web
 
