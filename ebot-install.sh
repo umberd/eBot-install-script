@@ -391,7 +391,8 @@ all:
 	
 	# IF INSTALL IS FOR A SUB-DOMAIN
 	if [[ "$SUBORIP" -eq 1 ]]; then
-		echo "<VirtualHost *:80>
+		echo "
+		<VirtualHost *:80>
 	#Edit your email
 	ServerAdmin contact@mydomain.com
 
