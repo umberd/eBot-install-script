@@ -323,16 +323,26 @@ DELAY_READY = true' > /home/ebot/ebot-csgo/config/config.ini
   log_match: ../../ebot-csgo/logs/log_match
   log_match_admin: ../../ebot-csgo/logs/log_match_admin
   demo_path: ../../ebot-csgo/demos
+
+  default_max_round: 15
+  default_rules: rules
+  default_overtime_max_round: 3
+  default_overtime_startmoney: 16000
+
   # true or false, whether demos will be downloaded by the ebot server
   # the demos can be downloaded at the matchpage, if it's true
+
   demo_download: true
   ebot_ip: "$IP"
   ebot_port: 12360
+
   # lan or net, it's to display the server IP or the GO TV IP
   # net mode display only started match on home page
-  mode: lan
+  mode: net
+
   # set to 0 if you don't want a refresh
   refresh_time: 30
+
   # Toornament Configuration
   toornament_id:
   toornament_secret:
