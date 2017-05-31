@@ -430,7 +430,7 @@ DocumentRoot /home/ebot/ebot-web/web
 	</IfVersion>
 </Directory> ' > /etc/apache2/sites-available/ebotv3.conf
 
-		echo 'Options +FollowSymLinks +ExecCGI
+		echo ' Options +FollowSymLinks +ExecCGI
   <IfModule mod_rewrite.c>
   RewriteEngine On
 
