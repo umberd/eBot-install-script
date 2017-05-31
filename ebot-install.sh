@@ -139,9 +139,9 @@ else
 	# COMPILE AND INSTALL THE NEW PHP VERSION:
 	mkdir /home/install
 	cd /home/install
-	wget http://be2.php.net/get/php-5.6.30.tar.bz2/from/this/mirror -O php-5.6.30.tar.bz2
-	tar -xjvf php-5.6.30.tar.bz2
-	cd php-5.6.30
+	wget http://be2.php.net/get/php-5.6.27.tar.bz2/from/this/mirror -O php-5.6.27.tar.bz2
+	tar -xjvf php-5.6.27.tar.bz2
+	cd php-5.6.27
 	./configure --prefix /usr/local --with-mysql --enable-maintainer-zts --enable-sockets --with-openssl --with-pdo-mysql 
 	make
 	make install
@@ -266,32 +266,27 @@ else
 ; @author      Julien Pardons <julien.pardons@esport-tools.net>
 ; @version     3.0
 ; @date        21/10/2012
-
 [BDD]
 MYSQL_IP = "127.0.0.1"
 MYSQL_PORT = "3306"
 MYSQL_USER = "ebotv3"
 MYSQL_PASS = "'$SQLPASSWORDEBOTV3'"
 MYSQL_BASE = "ebotv3"
-
 [Config]
 BOT_IP = "'$IP'"
 BOT_PORT = 12360
-EXTERNAL_LOG_IP = "'$EXTIP'" ; use this in case your server isn't binded with the external IP behind NAT
+EXTERNAL_LOG_IP = "'$EXTIP'" ; use this in case your server isnt binded with the external IP (behind a NAT)
 MANAGE_PLAYER = 1
 DELAY_BUSY_SERVER = 120
 NB_MAX_MATCHS = 0
 PAUSE_METHOD = "nextRound" ; nextRound or instantConfirm or instantNoConfirm
 NODE_STARTUP_METHOD = "node" ; binary file name or none in case you are starting it with forever or manually
-
 [Match]
 LO3_METHOD = "restart" ; restart or csay or esl
 KO3_METHOD = "restart" ; restart or csay or esl
 DEMO_DOWNLOAD = true ; true or false :: whether gotv demos will be downloaded from the gameserver after matchend or not
 REMIND_RECORD = false ; true will print the 3x "Remember to record your own POV demos if needed!" messages, false will not
 DAMAGE_REPORT = true; true will print damage reports at end of round to players, false will not
-USE_DELAY_END_RECORD = false ; use the tv_delay to record postpone the tv_stoprecord & upload
-
 [MAPS]
 MAP[] = "de_cache"
 MAP[] = "de_season"
@@ -302,9 +297,7 @@ MAP[] = "de_train"
 MAP[] = "de_mirage"
 MAP[] = "de_cbble"
 MAP[] = "de_overpass"
-
 [WORKSHOP IDs]
-
 [Settings]
 COMMAND_STOP_DISABLED = false
 RECORD_METHOD = "matchstart" ; matchstart or knifestart
@@ -327,31 +320,19 @@ DELAY_READY = true' > /home/ebot/ebot-csgo/config/config.ini
 	echo "# ----------------------------------------------------------------------
 # white space are VERY important, don't remove it or it will not work
 # ----------------------------------------------------------------------
-
   log_match: ../../ebot-csgo/logs/log_match
   log_match_admin: ../../ebot-csgo/logs/log_match_admin
   demo_path: ../../ebot-csgo/demos
-
-  default_max_round: 15
-  default_rules: rules
-  default_overtime_max_round: 3
-  default_overtime_startmoney: 16000
-
   # true or false, whether demos will be downloaded by the ebot server
   # the demos can be downloaded at the matchpage, if it's true
-
   demo_download: true
-
   ebot_ip: "$IP"
   ebot_port: 12360
-
   # lan or net, it's to display the server IP or the GO TV IP
   # net mode display only started match on home page
-  mode: net
-
+  mode: lan
   # set to 0 if you don't want a refresh
   refresh_time: 30
-
   # Toornament Configuration
   toornament_id:
   toornament_secret:
@@ -362,7 +343,6 @@ DELAY_READY = true' > /home/ebot/ebot-csgo/config/config.ini
 	rm /home/ebot/ebot-web/config/databases.yml
 	echo "# You can find more information about this file on the symfony website:
 # http://www.symfony-project.org/reference/1_4/en/07-Databases
-
 all:
   doctrine:
     class: sfDoctrineDatabase
@@ -391,12 +371,12 @@ all:
 	
 	# IF INSTALL IS FOR A SUB-DOMAIN
 	if [[ "$SUBORIP" -eq 1 ]]; then
-		echo ' <VirtualHost *:80>
-ServerAdmin contact@mydomain.com
-ServerAlias '$SUBDOMAIN'
-
+		echo "<VirtualHost *:80>
+	#Edit your email
+	ServerAdmin contact@mydomain.com
+#Edit your sub-domain
+ServerAlias $SUBDOMAIN
 DocumentRoot /home/ebot/ebot-web/web
-
 <Directory /home/ebot/ebot-web/web/>
 	Options Indexes FollowSymLinks MultiViews
 	AllowOverride All
@@ -404,12 +384,11 @@ DocumentRoot /home/ebot/ebot-web/web
 		Order allow,deny
 		allow from all
 	</IfVersion>
-
 	<IfVersion >= 2.4>
 		Require all granted
 	</IfVersion>
 </Directory>
-</VirtualHost>' > /etc/apache2/sites-available/ebotv3.conf
+</VirtualHost>" > /etc/apache2/sites-available/ebotv3.conf
 
 
 
@@ -417,40 +396,35 @@ DocumentRoot /home/ebot/ebot-web/web
 		a2ensite ebotv3.conf
 		
 	else
-		echo ' Alias / /home/ebot/ebot-web/web/
- <Directory /home/ebot/ebot-web/web/>
+		echo "Alias / /home/ebot/ebot-web/web/
+<Directory /home/ebot/ebot-web/web/>
 	AllowOverride All
 	<IfVersion < 2.4>
 		Order allow,deny
 		allow from all
 	</IfVersion>
-
 	<IfVersion >= 2.4>
 		Require all granted
 	</IfVersion>
-</Directory> ' > /etc/apache2/sites-available/ebotv3.conf
+</Directory>" > /etc/apache2/sites-available/ebotv3.conf
 
-		echo ' Options +FollowSymLinks +ExecCGI
-  <IfModule mod_rewrite.c>
+		echo "Options +FollowSymLinks +ExecCGI
+<IfModule mod_rewrite.c>
   RewriteEngine On
-
   # uncomment the following line, if you are having trouble
   # getting no_script_name to work
   RewriteBase /
-
   # we skip all files with .something
   #RewriteCond %{REQUEST_URI} \..+$
   #RewriteCond %{REQUEST_URI} !\.html$
   #RewriteRule .* - [L]
-
   # we check if the .html version is here (caching)
   RewriteRule ^$ index.html [QSA]
   RewriteRule ^([^.]+)$ $1.html [QSA]
   RewriteCond %{REQUEST_FILENAME} !-f
-
   # no, so we redirect to our front web controller
   RewriteRule ^(.*)$ index.php [QSA,L]
-</IfModule>' > /home/ebot/ebot-web/web/.htaccess
+</IfModule>" > /home/ebot/ebot-web/web/.htaccess
 
 		a2ensite ebotv3.conf
 	fi
@@ -476,8 +450,9 @@ DocumentRoot /home/ebot/ebot-web/web
 	if [[ "$SUBORIP" -eq 1 ]]; then
 		echo "You can access to eBot-WEB interface here: http://$SUBDOMAIN"
 	else
-		echo "You can access to ebot client here: http://"$IP
+		echo "You can access to ebot client here: http://$IP"
 	fi
-	echo "Username: "$EBOTUSER
-	echo "Password: "$EBOTPASSWORD
+	echo "Username: $EBOTUSER"
+	echo "Password: $EBOTPASSWORD"
+	echo ""
 fi
