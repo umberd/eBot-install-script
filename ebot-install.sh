@@ -417,8 +417,7 @@ DocumentRoot /home/ebot/ebot-web/web
 		a2ensite ebotv3.conf
 		
 	else
-		echo "Alias / /home/ebot/ebot-web/web/
-
+		echo " Alias / /home/ebot/ebot-web/web/
 <Directory /home/ebot/ebot-web/web/>
 	AllowOverride All
 	<IfVersion < 2.4>
