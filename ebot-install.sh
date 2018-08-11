@@ -156,7 +156,7 @@ else
 	echo 'date.timezone = Europe/Paris' >> /usr/local/lib/php.ini
 	echo 'extension=pthreads.so' >> /usr/local/lib/php.ini
 	
-	apt-get install libapache2-mod-php5 -y
+	apt-get install libapache2-mod-php5 php5-curl -y
 	if [ $? != 0 ]; then
 		echo "(LINE 162) There is an error. Are you running apt application somewhere?"
 		echo "Can you check your debian source list?"
