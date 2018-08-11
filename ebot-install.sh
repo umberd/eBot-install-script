@@ -240,7 +240,7 @@ else
 		exit
 	fi
 	
-	npm install socket.io@0.9.12 archiver formidable
+	npm install socket.io@0.9.12 archiver@0.4.10 formidable
 	curl -sS https://getcomposer.org/installer | php
 	php composer.phar install
 	# Command line of my ebot guide: cp config/config.ini.smp config/config.ini
