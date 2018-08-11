@@ -1,7 +1,7 @@
 # ebot-install-script
 Ebot-CSGO install Script
 
-Please use it on debian 8. Others versions will come later
+Please use it on debian 8. Others versions will come later.
 
 You can find Ebot-CSGO here: https://github.com/deStrO/eBot-CSGO
 
