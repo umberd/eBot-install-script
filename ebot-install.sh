@@ -363,7 +363,7 @@ all:
 	#ASK USER USERNAME AND PASSWORD
 	echo "THE LAST QUESTION: I need a username and a password for ebot"
 	read -p "Username: " -e -i admin EBOTUSER
-	read -p "Username: " -e -i password EBOTPASSWORD
+	read -p "Password: " -e -i password EBOTPASSWORD
 	php symfony guard:create-user --is-super-admin admin@ebot $EBOTUSER $EBOTPASSWORD
 	
 	# 7) CONFIG APACHE
